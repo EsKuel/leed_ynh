@@ -59,7 +59,7 @@ curl -k "https://$domain$path/install.php?installButton&install_changeLngLeed=fr
 
 # Rend à nouveau privé
 # #  (Check this!)
-sudo yunohost app setting wordpress skipped_uris -d
+sudo yunohost app setting leed skipped_uris -d
 sudo yunohost app ssowatconf
 
 # Reload Nginx and regenerate SSOwat conf
