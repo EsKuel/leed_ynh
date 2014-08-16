@@ -47,10 +47,20 @@ sudo chown -R www-data: $final_path
 sudo sed -i "s@PATHTOCHANGE@$path@g" /etc/nginx/conf.d/$domain.d/leed.conf
 sudo sed -i "s@ALIASTOCHANGE@$final_path/@g" /etc/nginx/conf.d/$domain.d/leed.conf
 
+# Rend l'app publique pour curl
+# #  (Recheck this!)
+sudo yunohost app setting leed skipped_uris -v "/"
+sudo yunohost app ssowatconf
+
 # Leed installation via curl
 echo "127.0.0.1 $domain #yunoleed" | sudo tee -a /etc/hosts
 sleep 1
-curl -kL -X POST https://$domain$path/install.php --data "install_changeLngLeed=fr&root=$domain$path&mysqlHost=localhost&mysqlLogin=$db_login&mysqlMdp=$db_pwd&mysqlBase=$db_user&mysqlPrefix=leed_&login=$admin&password=$db_pwd" > /dev/null 2>&1
+curl -k "https://$domain$path/install.php?installButton&install_changeLngLeed=fr&root=$domain$path&mysqlHost=localhost&mysqlLogin=$db_user&mysqlMdp=$db_pwd&mysqlBase=$db_user&mysqlPrefix=leed_&login=$admin&password=$db_pwd" > /dev/null 2>&1
+
+# Rend à nouveau privé
+# #  (Check this!)
+sudo yunohost app setting wordpress skipped_uris -d
+sudo yunohost app ssowatconf
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
